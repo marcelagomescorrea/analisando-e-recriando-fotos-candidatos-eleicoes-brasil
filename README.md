@@ -1,2 +1,4 @@
-# analisando-e-recriando-fotos-candidatos-eleicoes-brasil
-Analisando e recriando fotos de candidatos das últimas eleições no Brasil usando Deep Learning
+![GitHub repo size](https://img.shields.io/github/repo-size/marcelagomescorrea/analisando-e-recriando-fotos-candidatos-eleicoes-brasil)
+
+# Analisando e recriando foto de candidatos eleitos nas últimas eleições no Brasil
+
