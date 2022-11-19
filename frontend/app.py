@@ -6,51 +6,40 @@ import os
 
 # Set page tab display
 st.set_page_config(
-   page_title="Simple Image Uploader",
+   page_title="Analisando e recriando foto de candidatos eleitos no Brasil",
    page_icon= '🖼️',
    layout="wide",
    initial_sidebar_state="expanded",
 )
 
-# Example local Docker container URL
-# url = 'http://api:8000'
-# Example localhost development URL
-# url = 'http://localhost:8000'
 load_dotenv()
-url = os.getenv('API_URL')
 
+url = os.getenv('LOCAL_API_URL') if os.getenv('DEPLOY') == 'LOCAL' else os.getenv('DOCKER_API_URL')
 
 # App title and description
-st.header('Simple Image Uploader 📸')
+st.header('Analisando e recriando foto de candidatos eleitos no Brasil 📸')
 st.markdown('''
-            > This is a Le Wagon boilerplate for any data science projects that involve exchanging images between a Python API and a simple web frontend.
-
-            > **What's here:**
-
-            > * [Streamlit](https://docs.streamlit.io/) on the frontend
-            > * [FastAPI](https://fastapi.tiangolo.com/) on the backend
-            > * [PIL/pillow](https://pillow.readthedocs.io/en/stable/) and [opencv-python](https://github.com/opencv/opencv-python) for working with images
-            > * Backend and frontend can be deployed with Docker
+            > Disclaimer: this is a data science project designed for academic purposes. Do not take it seriously.
             ''')
 
 st.markdown("---")
 
 ### Create a native Streamlit file upload input
 st.markdown("### Let's do a simple face recognition 👇")
-img_file_buffer = st.file_uploader('Upload an image')
+img_camera_buffer = st.camera_input("Take a picture")
 
-if img_file_buffer is not None:
+if img_camera_buffer is not None:
 
   col1, col2 = st.columns(2)
 
   with col1:
     ### Display the image user uploaded
-    st.image(Image.open(img_file_buffer), caption="Here's the image you uploaded ☝️")
+    st.image(Image.open(img_camera_buffer), caption="Here's the image you uploaded ☝️")
 
   with col2:
     with st.spinner("Wait for it..."):
       ### Get bytes from the file buffer
-      img_bytes = img_file_buffer.getvalue()
+      img_bytes = img_camera_buffer.getvalue()
 
       ### Make request to  API (stream=True to stream response as bytes)
       res = requests.post(url + "/upload_image", files={'img': img_bytes})
@@ -62,3 +51,4 @@ if img_file_buffer is not None:
         st.markdown("**Oops**, something went wrong 😓 Please try again.")
         print(res.status_code, res.content)
 
+      st.write("""<style>[data-testid="stHorizontalBlock"]{text-align:center;align-items:center;}</style>""",unsafe_allow_html=True)

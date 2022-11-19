@@ -2,10 +2,10 @@
 #          INSTALL & TEST
 # ----------------------------------
 install_requirements:
-	@pip install -r requirements.tx
+	@pip install -r requirements.txt
 
 # ----------------------------------
-#      Run frontend
+#     		  RUN FRONTEND
 # ----------------------------------
-run:
+run_ui:
 	@streamlit run app.py
