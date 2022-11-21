@@ -14,13 +14,11 @@ st.set_page_config(
 
 load_dotenv()
 
-url = os.getenv('LOCAL_API_URL') if os.getenv('DEPLOY') == 'LOCAL' else os.getenv('DOCKER_API_URL')
+url = os.getenv('LOCAL_API_URL') if str.strip(os.getenv('DEPLOY')) == 'LOCAL' else os.getenv('DOCKER_API_URL')
 
 # App title and description
-st.header('Analisando e recriando foto de candidatos eleitos no Brasil 📸')
-st.markdown('''
-            > Disclaimer: this is a data science project designed for academic purposes. Do not take it seriously.
-            ''')
+st.markdown('# Analisando e recriando foto de candidatos eleitos no Brasil 📸')
+st.markdown('### Disclaimer: this is a data science project designed for academic purposes. Do not take it seriously. ')
 
 st.markdown("---")
 

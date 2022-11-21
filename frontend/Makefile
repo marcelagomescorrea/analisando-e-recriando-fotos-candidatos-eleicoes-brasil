@@ -8,4 +8,4 @@ install_requirements:
 #     		  RUN FRONTEND
 # ----------------------------------
 run_ui:
-	@streamlit run app.py
+	@streamlit run Home.py
