@@ -12,6 +12,7 @@ numpy
 fastapi
 uvicorn
 python-multipart
+python-dotenv
 
 # img
 opencv-python
