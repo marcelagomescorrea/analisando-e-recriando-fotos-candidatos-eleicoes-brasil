@@ -53,12 +53,10 @@ def save_image_local(filename: str, face, bw: bool, eleito: bool):
 
   if bw:
     folder = os.path.join(os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_OUTPUT_IMG")),
-                          'elected' if eleito else 'not_elected',
-                          'bw')
+                          'bw', 'elected' if eleito else 'not_elected')
   else:
     folder = os.path.join(os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_OUTPUT_IMG")),
-                          'elected' if eleito else 'not_elected',
-                          'color')
+                          'color', 'elected' if eleito else 'not_elected')
 
 
   if not os.path.exists(folder):

@@ -23,7 +23,7 @@ def crop_face(face):
     w_slack, h_slack = w//2, h//2
     img_cropped = face[
         max(0,y-h_slack):
-        min(face.shape[0]-1,y+h+h_slack), 
+        min(face.shape[0]-1,y+h+h_slack),
         max(0, x-w_slack):
         min(face.shape[1]-1,x+w+w_slack),
         :]
