@@ -4,6 +4,9 @@
 install_requirements:
 	@pip install -r requirements.txt
 
+run_preprocess_images:
+	python -c 'from data_source.main import preprocess; preprocess()'
+
 ##### Prediction API - - - - - - - - - - - - - - - - - - - - - - - - -
 
 run_api:

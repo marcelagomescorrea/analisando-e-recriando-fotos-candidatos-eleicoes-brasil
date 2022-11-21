@@ -5,7 +5,7 @@ from starlette.responses import Response
 import numpy as np
 import cv2
 import io
-from face_rec.face_detection import crop, pad
+from face_rec.face_detection import crop_face, resize_face, pad_face
 
 app = FastAPI()
 
@@ -31,7 +31,8 @@ async def receive_image(img: UploadFile=File(...)):
     cv2_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR) # type(cv2_img) => numpy.ndarray
 
     ### Do cool stuff with your image.... For example face detection
-    annotated_img = pad(crop(cv2_img))
+    print(cv2_img.shape)
+    annotated_img = pad_face(resize_face(crop_face(cv2_img)))
 
     ### Encoding and responding with the image
     im = cv2.imencode('.png', annotated_img)[1] # extension depends on which format is sent from Streamlit
