@@ -7,6 +7,9 @@ install_requirements:
 run_preprocess_images:
 	python -c 'from data_source.main import preprocess; preprocess()'
 
+run_train_pca:
+	python -c 'from pca_logic.main import fit; fit()'
+
 ##### Prediction API - - - - - - - - - - - - - - - - - - - - - - - - -
 
 run_api:
