@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # You can add --server.port $PORT if you need to set PORT as a specific env variable
-CMD streamlit run app.py
+CMD streamlit run Home.py

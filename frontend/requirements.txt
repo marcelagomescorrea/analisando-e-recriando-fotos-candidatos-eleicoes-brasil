@@ -11,6 +11,6 @@ six
 pillow
 
 # web
-streamlit
+streamlit==1.13.0
 requests
 python-dotenv
