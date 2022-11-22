@@ -54,8 +54,10 @@ def preprocess():
 
                 # break out of while loop if cleaning removed all rows
                 if len(data_chunk_cleaned) == 0:
-                    print(f"{year}, {state}: No cleaned data in latest chunk...")
+                    print(f"{year}, {state}: ❌ No cleaned data in latest chunk...")
                     break
+                else:
+                    print(f"{year}, {state}: ✅ data cleaned")
 
                 images_processed_chunk = preprocess_chunk_images(data_chunk_cleaned)
 

@@ -12,8 +12,6 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df[COLUMN_NAMES_FULL]
     df = df.dropna(subset=['filename'])
 
-    print("✅ data cleaned")
-
     return df
 
 def get_chunk(year: str,
