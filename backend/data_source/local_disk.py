@@ -52,7 +52,7 @@ def save_local_chunk(data: pd.DataFrame):
   """
 
   for ind in data.index:
-    state = data['SG_UE'][ind]
+    state = data['SG_UF'][ind]
     year = str(data['ANO_ELEICAO'][ind])
     eleito = data['DS_SIT_TOT_TURNO'][ind]
 
@@ -100,6 +100,7 @@ def extract_local_files() -> dict:
                     print(f"{year}: ✅ found state {match.group(1)} to preprocess 👌")
             return states_found
 
+
     src_folder = os.path.join(os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_SRC")))
     years = os.listdir(src_folder)
     result = dict()
@@ -110,8 +111,8 @@ def extract_local_files() -> dict:
             src_year_folder = os.path.join(src_folder, year)
             zipped_files = os.listdir(src_year_folder)
             for zipped_file in zipped_files:
-                if zipped_file.startswith('consulta'):
+                if zipped_file.startswith('consulta') and zipped_file.endswith('.zip'):
                     result[year] = unzip_local_files(year, zipped_file, csv=True)
-                elif zipped_file.startswith('foto'):
+                elif zipped_file.startswith('foto') and zipped_file.endswith('.zip'):
                     unzip_local_files(year, zipped_file, csv=False)
     return result
