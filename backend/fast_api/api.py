@@ -5,9 +5,10 @@ from starlette.responses import Response
 import numpy as np
 import cv2
 import io
-from face_rec.face_detection import crop_face, resize_face, pad_face, gray_face
-from face_rec.face_reconstruction import pca_reconstruction, pca_reconstruction_mean, pca_reconstruction_main
+from face_rec.face_detection import crop_face, resize_face, pad_face
+from face_rec.face_reconstruction import pca_reconstruction, pca_reconstruction_main
 from pca_logic.registry import load_pca
+import matplotlib.pyplot as plt
 
 app = FastAPI()
 
@@ -19,6 +20,15 @@ app = FastAPI()
 #     allow_methods=["*"],  # Allows all methods
 #     allow_headers=["*"],  # Allows all headers
 # )
+
+pcas = {}
+
+@app.on_event("startup")
+async def startup_event():
+    for idx in range(4):
+        elected = idx&1 == 1
+        bw = idx&2==2
+        pcas[(elected, bw)] = load_pca(elected=elected, bw=bw, save_copy_locally=False)
 
 @app.get("/")
 def index():
@@ -42,9 +52,9 @@ async def receive_image(img: UploadFile=File(...)):
 
 @app.post('/reconstruct_pca_main_components')
 async def receive_pca_mean_request(elected: bool, bw: bool, n_components: int):
-    pca = load_pca(elected=elected, bw=bw, save_copy_locally=False)
+    pca = pcas[(elected, bw)]
 
-    annotated_img = pca_reconstruction_main(pca, n_components)
+    annotated_img = pca_reconstruction_main(pca, n_components)*255
 
     im = cv2.imencode('.png', annotated_img)[1]
     return Response(content=im.tobytes(), media_type="image/png")
@@ -55,7 +65,7 @@ async def receive_image(elected: bool, bw: bool, img: UploadFile=File(...)):
     nparr = np.fromstring(contents, np.uint8)
     cv2_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    pca = load_pca(elected=elected, bw=bw, save_copy_locally=False)
+    pca = pcas[(elected, bw)]
     face = pad_face(resize_face(crop_face(cv2_img)))
 
     annotated_img = pca_reconstruction(pca, face)

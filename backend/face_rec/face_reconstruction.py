@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
 
 def pca_reconstruction(pca, photo):
     flattened_face = np.expand_dims(photo.reshape(np.prod(photo.shape)), axis=0)
@@ -15,6 +16,5 @@ def pca_reconstruction_main(pca, n_components):
     sc = MinMaxScaler()
     sc = sc.fit(pca.components_)
     input_transformado = sc.transform(pca.components_[0:n_components])
-    input_transformado = np.expand_dims(input_transformado.mean(axis=0), axis=1)
-    input_transformado = input_transformado.reshape((int(os.getenv("AUTOENCODER_HEIGHT")),int(os.getenv("AUTOENCODER_WIDTH")),3))
-    return input_transformado
+    input_transformado = input_transformado.mean(axis=0)
+    return input_transformado.reshape((int(os.getenv("AUTOENCODER_HEIGHT")),int(os.getenv("AUTOENCODER_WIDTH")),3))

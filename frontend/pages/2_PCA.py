@@ -21,14 +21,13 @@ st.markdown('# Analisando e recriando foto de candidatos eleitos no Brasil 📸'
 st.markdown('## Incremental principal component analysis')
 st.markdown("---")
 
-n_components = st.slider('Select the number of PCA components.', 0, 100, 1)
+n_components = st.slider('Select the number of PCA components.', 1, 100, 1)
 
-cols = st.columns(4)
+upper_cols = st.columns(4)
 
-for idx, col in enumerate(cols):
+for idx, col in enumerate(upper_cols):
     with col:
         st.spinner("Wait for it...")
-        ### Get bytes from the file buffer
 
         ### Make request to  API (stream=True to stream response as bytes)
         elected = idx&1 == 1
@@ -38,28 +37,19 @@ for idx, col in enumerate(cols):
 
         if res.status_code == 200:
             ### Display the image returned by the API
-            st.image(res.content, caption=f"This is you {'b&w-' if bw else ''}looking {'an elected' if elected else 'a not elected'} politician in Brazil")#☝️
+            st.image(res.content, caption=f"This is main-components {'b&w-' if bw else ''}looking {'an elected' if elected else 'a not elected'} politician in Brazil ☝️")#☝️
         else:
             st.markdown("**Oops**, something went wrong 😓 Please try again.")
             print(res.status_code, res.content)
-
-
-
-
-
-
-
-
-
 
 ### Create a native Streamlit file upload input
 img_camera_buffer = st.camera_input("Let's do a simple face recognition 👇")
 
 if img_camera_buffer is not None:
 
-    cols = st.columns(4)
+    lower_cols = st.columns(4)
 
-    for idx, col in enumerate(cols):
+    for idx, col in enumerate(lower_cols):
         with col:
             st.spinner("Wait for it...")
             ### Get bytes from the file buffer
@@ -73,7 +63,7 @@ if img_camera_buffer is not None:
 
             if res.status_code == 200:
                 ### Display the image returned by the API
-                st.image(res.content, caption=f"This is you {'b&w-' if bw else ''}looking {'an elected' if elected else 'a not elected'} politician in Brazil")#☝️
+                st.image(res.content, caption=f"This is you {'b&w-' if bw else ''}looking {'an elected' if elected else 'a not elected'} politician in Brazil ☝️")
             else:
                 st.markdown("**Oops**, something went wrong 😓 Please try again.")
                 print(res.status_code, res.content)
