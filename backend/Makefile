@@ -10,6 +10,9 @@ run_preprocess_images:
 run_train_pca:
 	python -c 'from pca_logic.main import fit; fit()'
 
+run_train_autoencoder:
+	python -c 'from autoencoder_logic.main import train; train()'
+
 ##### Prediction API - - - - - - - - - - - - - - - - - - - - - - - - -
 
 run_api:

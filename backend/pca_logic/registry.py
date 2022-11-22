@@ -39,7 +39,7 @@ def load_pca(elected: bool, bw: bool, save_copy_locally=False) -> IncrementalPCA
 
     #     return model
 
-    print(f"\nLoad model from local disk...")
+    print(f"\nLoad pca from local disk...")
 
    # get latest model version
     model_directory = os.path.join(os.path.expanduser(os.environ.get('LOCAL_REGISTRY_PATH')),
@@ -99,7 +99,7 @@ def save_pca(pca: IncrementalPCA, params: dict, elected: bool, bw: bool) -> None
 
     #     return None
 
-    print("\nSave model to local disk...")
+    print("\nSave pca to local disk...")
 
     # save params
     if params is not None:

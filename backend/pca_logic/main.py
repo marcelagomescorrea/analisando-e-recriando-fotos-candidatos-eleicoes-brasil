@@ -17,6 +17,7 @@ def fit_pca(elected=True, bw=True):
     print("\nLoading preprocessed data...")
 
     # model params
+    CHUNK_SIZE = int(os.getenv("CHUNK_SIZE"))
     PCA_BATCH_SIZE = int(os.getenv("PCA_BATCH_SIZE"))
     PCA_COMPONENTS = int(os.getenv("PCA_COMPONENTS"))
     AUTOENCODER_HEIGHT = int(os.getenv("AUTOENCODER_HEIGHT"))
@@ -32,7 +33,7 @@ def fit_pca(elected=True, bw=True):
     try:
         images_dataset = image_dataset_from_directory(folder,
                                                       label_mode=None,
-                                                      batch_size=PCA_BATCH_SIZE,
+                                                      batch_size=CHUNK_SIZE,
                                                       image_size=(AUTOENCODER_HEIGHT,AUTOENCODER_WIDTH),
                                                       shuffle=True,
                                                       crop_to_aspect_ratio=True)
