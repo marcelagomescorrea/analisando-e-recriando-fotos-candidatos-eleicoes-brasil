@@ -170,10 +170,12 @@ def pred(autoencoder: Model, X_pred: np.ndarray = None) -> np.ndarray:
     print("\n⭐️ use case: predict")
 
     if X_pred is None:
-        return Model(autoencoder.layers[-1].input, autoencoder.layers[-1].output).predict(np.random.normal(0,1,size=(1,autoencoder.layers[-2].output.shape[1])))
+        decoder = Model(autoencoder.layers[-1].input, autoencoder.layers[-1].output)
+        y_pred = decoder.predict(np.random.normal(0,1,size=(1,autoencoder.layers[-2].output.shape[1])))
+        return y_pred
 
     y_pred = autoencoder.predict(X_pred)
 
-    print("\n✅ prediction done: ", y_pred, y_pred.shape)
+    print("\n✅ prediction done: ", y_pred.shape)
 
     return y_pred

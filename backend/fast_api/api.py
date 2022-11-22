@@ -7,6 +7,9 @@ import cv2
 from face_rec.face_detection import crop_face, resize_face, pad_face
 from face_rec.face_reconstruction import pca_reconstruction, pca_reconstruction_main
 from pca_logic.registry import load_pca
+from autoencoder_logic.registry import load_autoencoder
+from autoencoder_logic.model import r_loss, kl_loss, total_loss
+from autoencoder_logic.main import pred
 
 app = FastAPI()
 
@@ -20,6 +23,7 @@ app = FastAPI()
 # )
 
 pcas = {}
+autoencoders = {}
 
 @app.on_event("startup")
 async def startup_event():
@@ -27,6 +31,7 @@ async def startup_event():
         elected = idx&1 == 1
         bw = idx&2==2
         pcas[(elected, bw)] = load_pca(elected=elected, bw=bw, save_copy_locally=False)
+        autoencoders[(elected, bw)] = load_autoencoder(elected=elected, bw=bw, custom_objects={'r_loss': r_loss, 'kl_loss': kl_loss, 'total_loss': total_loss}, save_copy_locally=False)
 
 @app.get("/")
 def index():
@@ -58,7 +63,7 @@ async def receive_pca_mean_request(elected: bool, bw: bool, n_components: int):
     return Response(content=im.tobytes(), media_type="image/png")
 
 @app.post('/reconstruct_pca')
-async def receive_image(elected: bool, bw: bool, img: UploadFile=File(...)):
+async def receive_pca_image(elected: bool, bw: bool, img: UploadFile=File(...)):
     contents = await img.read()
     nparr = np.fromstring(contents, np.uint8)
     cv2_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -67,6 +72,29 @@ async def receive_image(elected: bool, bw: bool, img: UploadFile=File(...)):
     face = pad_face(resize_face(crop_face(cv2_img)))
 
     annotated_img = pca_reconstruction(pca, face)
+
+    im = cv2.imencode('.png', annotated_img)[1]
+    return Response(content=im.tobytes(), media_type="image/png")
+
+@app.post('/reconstruct_autoencoder_randomly')
+async def receive_autoencoder_randomly_request(elected: bool, bw: bool):
+    autoencoder = autoencoders[(elected, bw)]
+
+    annotated_img = pred(autoencoder, None)[0]*255
+
+    im = cv2.imencode('.png', annotated_img)[1]
+    return Response(content=im.tobytes(), media_type="image/png")
+
+@app.post('/reconstruct_autoencoder')
+async def receive_autoencoder_image(elected: bool, bw: bool, img: UploadFile=File(...)):
+    contents = await img.read()
+    nparr = np.fromstring(contents, np.uint8)
+    cv2_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    autoencoder = autoencoders[(elected, bw)]
+    face = pad_face(resize_face(crop_face(cv2_img)))
+
+    annotated_img = pred(autoencoder, np.expand_dims(face, axis=0))[0]*255
 
     im = cv2.imencode('.png', annotated_img)[1]
     return Response(content=im.tobytes(), media_type="image/png")
