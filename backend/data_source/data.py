@@ -1,6 +1,6 @@
 import pandas as pd
-from data_source.local_disk import get_pandas_chunk, save_local_chunk, extract_files
-from data_source.params import COLUMN_NAMES_FULL, states
+from data_source.local_disk import get_pandas_chunk, save_local_chunk, extract_local_files
+from data_source.params import COLUMN_NAMES_FULL
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -60,14 +60,13 @@ def save_chunk(data: pd.DataFrame) -> None:
 
     save_local_chunk(data=data)
 
-def unzip_files(year: str):
-    filename = f'consulta_cand_{year}.zip'
-    extract_files(year, filename, csv=True)
-    if year != '2014':
-        for state in states:
-            if year == '2018' and state == 'DF': continue
-            filename = f'foto_cand{year}_{state}_div.zip'
-            extract_files(year, filename, csv=False)
-    else:
-        filename = f'foto_cand{year}_div.zip'
-        extract_files(year, filename, csv=False)
+def extract_files() -> dict:
+    """
+    extract files
+    """
+
+    # if os.environ.get("DATA_SOURCE") == "big query":
+    #     ...
+    #     return
+
+    return extract_local_files()

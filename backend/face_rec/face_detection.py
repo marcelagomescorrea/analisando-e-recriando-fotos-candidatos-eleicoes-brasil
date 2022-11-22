@@ -1,14 +1,11 @@
 import cv2
 import numpy as np
 from dotenv import load_dotenv
+from face_rec.utils import open_image_local
 import os
 
 AUTOENCODER_WIDTH = int(os.getenv('AUTOENCODER_WIDTH'))
 AUTOENCODER_HEIGHT = int(os.getenv('AUTOENCODER_HEIGHT'))
-
-def open_image_local(path):
-  img = cv2.imread(path, cv2.COLOR_BGR2RGB)
-  return img
 
 def crop_face(face):
   face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')

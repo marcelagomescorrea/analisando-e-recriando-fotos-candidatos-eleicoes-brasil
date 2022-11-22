@@ -1,16 +1,14 @@
-import zipfile
+import re
 import os
 import pandas as pd
 import numpy as np
-import cv2
+import zipfile
 
 from data_source.utils import get_img_filename
 from face_rec.face_detection import gray_face, is_gray
-from data_source.params import COLUMN_NAMES
+from face_rec.utils import save_image_local
+from data_source.params import COLUMN_NAMES, states
 
-def open_image_local(path: str):
-  img = cv2.imread(path, cv2.COLOR_BGR2RGB)
-  return img
 
 def get_pandas_chunk(year: str,
                      state: str,
@@ -48,23 +46,6 @@ def get_pandas_chunk(year: str,
 
     return df
 
-def save_image_local(filename: str, face, bw: bool, eleito: bool):
-  folder = None
-
-  if bw:
-    folder = os.path.join(os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_OUTPUT_IMG")),
-                          'bw', 'elected' if eleito else 'not_elected')
-  else:
-    folder = os.path.join(os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_OUTPUT_IMG")),
-                          'color', 'elected' if eleito else 'not_elected')
-
-
-  if not os.path.exists(folder):
-    os.makedirs(folder)
-  cv2.imwrite(os.path.join(folder, filename), face)
-
-  return None
-
 def save_local_chunk(data: pd.DataFrame):
   """
   save a chunk of the dataset to local disk
@@ -92,15 +73,45 @@ def save_local_chunk(data: pd.DataFrame):
       save_image_local(year+'F'+state+str(sq_candidato)+'_div.jpg', gray_face(face), True, eleito)
 
 
-def extract_files(year: str, filename: str, csv: bool):
-    from_path = os.path.join(
-        os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_SRC")),
-        year,
-        filename)
+def extract_local_files() -> dict:
+    def unzip_local_files(year: str, filename: str, csv: bool):
+        from_path = os.path.join(
+            os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_SRC")),
+            year,
+            filename)
 
-    zip_ref = zipfile.ZipFile(from_path, 'r')
+        zip_ref = zipfile.ZipFile(from_path, 'r')
 
-    zip_ref.extractall(os.path.join(
-        os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_CSV")) if csv else os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_INPUT_IMG")),
-        year))
-    zip_ref.close()
+        to_path = os.path.join(
+            os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_CSV")) if csv else os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_INPUT_IMG")),
+            year)
+
+        zip_ref.extractall(to_path)
+        zip_ref.close()
+
+        if csv:
+            states_found = []
+            state_str = '|'.join(states)
+            extracted_filenames = os.listdir(to_path)
+            for extracted_filename in extracted_filenames:
+                match = re.match(rf'.*_({state_str}).csv$', extracted_filename)
+                if match is not None:
+                    states_found.append(match.group(1))
+                    print(f"\n✅ found state {match.group(1)} to preprocess 👌")
+            return states_found
+
+    src_folder = os.path.join(os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_SRC")))
+    years = os.listdir(src_folder)
+    result = dict()
+    for year in years:
+        match = re.match(r'(\d+)', year)
+        if match is not None:
+            print(f"\n✅ found year {match.group(1)} to preprocess 👌")
+            src_year_folder = os.path.join(src_folder, year)
+            zipped_files = os.listdir(src_year_folder)
+            for zipped_file in zipped_files:
+                if zipped_file.startswith('consulta'):
+                    result[year] = unzip_local_files(year, zipped_file, csv=True)
+                elif zipped_file.startswith('foto'):
+                    unzip_local_files(year, zipped_file, csv=False)
+    return result
