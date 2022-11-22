@@ -7,24 +7,19 @@
 
 ## ☕ Descrição do problema
 
-Lero lero
+O projeto atual teve como ponto de partida os questionamentos provocados no artigo da Folha de São Paulo intitulado [Mulheres com traços considerados mais masculinos têm vantagem em eleições no Brasil](https://www1.folha.uol.com.br/ciencia/2022/10/mulheres-com-tracos-considerados-mais-masculinos-tem-vantagem-em-eleicoes-no-brasil-aponta-estudo.shtml). Segundo estudo apresentado no artigo, o rosto de candidatas mulheres tem influência sobre o desempenho das mesmas nas eleições, quanto mais masculino os traços, maiores as chances de serem eleitas.
 
-## 🚀 Descrição da solução de IA
+A partir daí, esse projeto se propõe a analisar padrões em fotos dos candidatos eleitos nas últimas eleições no Brasil (2022 a 2014) utilizando tanto técnicas de aprendizado não supervisionado (unsupervised learning) quanto de aprendizado profundo (deep learning).
 
-Lore ipsum **bold**
+## 🚀 Solução de IA
+
+Como etapa inicial, utilizamos o PCA (Análise de Componentes Principais) para verificar se de fato há padrões na foto do candidato padrão eleito e comparamos com o não eleito. Em seguida criamos uma rede neural com arquitetura autoencoder, mais especificamente autoencoder variacional (VAE), que lida melhor na geração de novas imagens.
 
 ## 📫 Fonte dos dados
-Os dados utilizados estão disponíveis no [Portal de Dados Abertos](https://dadosabertos.tse.jus.br/) do Tribunal Superior Eleitoral (TSE).
+Para treinamento do modelo e da rede neural, foram utilizados fotos de candidatos cadastrados no sistema do TSE das eleições de 2022 a 2014, sendo que a maioria das fotos até 2016 são coloridas e em 2014 são em preto e branco. Também foi utilizado arquivos .csv contendo informações dos candidatos que foram eleitoes ou não.
 
+Os dados utilizados estão disponíveis no [Portal de Dados Abertos](https://dadosabertos.tse.jus.br/) do Tribunal Superior Eleitoral (TSE). 
 
-
-# Data analysis
-- Document here the project: analisando-e-recriando-fotos-candidatos-eleicoes-brasil
-- Description: Project Description
-- Data Source:
-- Type of analysis:
-
-Please document the project the better you can.
 
 # Startup the project
 
