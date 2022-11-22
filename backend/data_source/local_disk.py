@@ -97,7 +97,7 @@ def extract_local_files() -> dict:
                 match = re.match(rf'.*_({state_str}).csv$', extracted_filename)
                 if match is not None:
                     states_found.append(match.group(1))
-                    print(f"\n✅ found state {match.group(1)} to preprocess 👌")
+                    print(f"{year}: ✅ found state {match.group(1)} to preprocess 👌")
             return states_found
 
     src_folder = os.path.join(os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_SRC")))
@@ -106,7 +106,7 @@ def extract_local_files() -> dict:
     for year in years:
         match = re.match(r'(\d+)', year)
         if match is not None:
-            print(f"\n✅ found year {match.group(1)} to preprocess 👌")
+            print(f"✅ found year {match.group(1)} to preprocess 👌")
             src_year_folder = os.path.join(src_folder, year)
             zipped_files = os.listdir(src_year_folder)
             for zipped_file in zipped_files:
