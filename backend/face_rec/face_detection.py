@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from dotenv import load_dotenv
-from face_rec.utils import open_image_local
 import os
 
 AUTOENCODER_WIDTH = int(os.getenv('AUTOENCODER_WIDTH'))

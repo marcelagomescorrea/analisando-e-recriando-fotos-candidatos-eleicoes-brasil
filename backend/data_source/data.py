@@ -1,6 +1,7 @@
 import pandas as pd
-from data_source.local_disk import get_pandas_chunk, save_local_chunk, extract_local_files
-from data_source.params import COLUMN_NAMES_FULL
+import numpy as np
+from data_source.local_disk import get_pandas_chunk, save_local_chunk, extract_local_files, load_local_chunk_images
+from data_source.params import COLUMN_NAMES_FULL, FILENAME_COLUMN_NAME
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -10,7 +11,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # remove useless/redundant columns
     df = df[COLUMN_NAMES_FULL]
-    df = df.dropna(subset=['filename'])
+    df = df.dropna(subset=FILENAME_COLUMN_NAME)
 
     return df
 
@@ -68,3 +69,14 @@ def extract_files() -> dict:
     #     return
 
     return extract_local_files()
+
+def load_chunk_images(df: pd.DataFrame) -> np.ndarray:
+    """
+    load chunk images
+    """
+
+    # if os.environ.get("DATA_SOURCE") == "big query":
+    #     ...
+    #     return
+
+    return load_local_chunk_images(df)

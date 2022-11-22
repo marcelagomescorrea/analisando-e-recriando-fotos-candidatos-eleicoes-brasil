@@ -1,19 +1,7 @@
-import os
-import numpy as np
-import pandas as pd
-
-from data_source.data import clean_data, get_chunk, save_chunk, extract_files
-from face_rec.face_detection import pad_face, resize_face, crop_face, open_image_local
-from face_rec.utils import open_image_local
-
-def preprocess_chunk_images(df: pd.DataFrame) -> np.ndarray:
-  def preprocess_image(filename: str) -> list:
-    return pad_face(resize_face(crop_face(open_image_local(filename))))
-  df['face'] = df['filename'].map(preprocess_image)
-  return df
+from data_source.data import clean_data, get_chunk, save_chunk, extract_files, load_chunk_images
+from data_source.params import CHUNK_SIZE
 
 def preprocess():
-
     year_and_states_list = extract_files()
     all_chunk_count = 0
     all_rows_count = 0
@@ -30,7 +18,6 @@ def preprocess():
             chunk_id = 0
             row_count = 0
             cleaned_row_count = 0
-            CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE"))
 
             while (True):
 
@@ -59,7 +46,7 @@ def preprocess():
                 else:
                     print(f"{year}, {state}: ✅ data cleaned")
 
-                images_processed_chunk = preprocess_chunk_images(data_chunk_cleaned)
+                images_processed_chunk = load_chunk_images(data_chunk_cleaned)
 
                 save_chunk(images_processed_chunk)
 

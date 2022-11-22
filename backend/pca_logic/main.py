@@ -2,7 +2,7 @@ import os
 from tensorflow.keras.utils import image_dataset_from_directory
 from tensorflow.errors import NotFoundError
 from tensorflow.keras.layers import Rescaling, Flatten
-from pca_logic.registry import load_pca, save_pca
+from pca_logic.registry import save_pca
 from pca_logic.model import initialize_pca
 
 def fit_pca(elected=True, bw=True):

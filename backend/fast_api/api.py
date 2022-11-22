@@ -1,14 +1,12 @@
 from fastapi import FastAPI, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
+#from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 
 import numpy as np
 import cv2
-import io
 from face_rec.face_detection import crop_face, resize_face, pad_face
 from face_rec.face_reconstruction import pca_reconstruction, pca_reconstruction_main
 from pca_logic.registry import load_pca
-import matplotlib.pyplot as plt
 
 app = FastAPI()
 
