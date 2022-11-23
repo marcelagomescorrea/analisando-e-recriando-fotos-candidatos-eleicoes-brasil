@@ -32,7 +32,7 @@ for idx, col in enumerate(upper_cols):
         elected = idx&1 == 1
         bw = idx&2==2
 
-        res = requests.post(url + "/reconstruct_pca_main_components", params={'elected': elected, 'bw': bw, 'n_components': n_components})
+        res = requests.post(url + "/reconstruct_random", params={'model': 'pca', 'elected': elected, 'bw': bw, 'n_components': n_components})
 
         if res.status_code == 200:
             ### Display the image returned by the API
@@ -58,7 +58,7 @@ if img_camera_buffer is not None:
             elected = idx&1 == 1
             bw = idx&2==2
 
-            res = requests.post(url + "/reconstruct_pca", params={'elected': elected, 'bw': bw}, files={'img': img_bytes})
+            res = requests.post(url + "/reconstruct_photo", params={'model': 'pca', 'elected': elected, 'bw': bw}, files={'img': img_bytes})
 
             if res.status_code == 200:
                 ### Display the image returned by the API

@@ -4,6 +4,7 @@ from tensorflow.errors import NotFoundError
 from tensorflow.keras.layers import Rescaling, Flatten
 from pca_logic.registry import save_pca
 from pca_logic.model import initialize_pca
+from pca_logic.params import CHUNK_SIZE, PCA_BATCH_SIZE, PCA_COMPONENTS, AUTOENCODER_HEIGHT, AUTOENCODER_WIDTH, LOCAL_DATA_PATH_OUTPUT_IMG
 
 def fit_pca(elected=True, bw=True):
     """
@@ -12,19 +13,12 @@ def fit_pca(elected=True, bw=True):
     Save final model once it has seen all data, and compute validation metrics on a holdout validation set
     common to all chunks.
     """
-    print("\n⭐️ use case: fit pca")
+    print(f"\n⭐️ use case: fit pca on {'elected' if elected else 'not elected'} candidates with {'b&w' if bw else 'color'}-images")
 
     print("\nLoading preprocessed data...")
 
-    # model params
-    CHUNK_SIZE = int(os.getenv("CHUNK_SIZE"))
-    PCA_BATCH_SIZE = int(os.getenv("PCA_BATCH_SIZE"))
-    PCA_COMPONENTS = int(os.getenv("PCA_COMPONENTS"))
-    AUTOENCODER_HEIGHT = int(os.getenv("AUTOENCODER_HEIGHT"))
-    AUTOENCODER_WIDTH = int(os.getenv("AUTOENCODER_WIDTH"))
-
     folder = os.path.join(
-        os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_OUTPUT_IMG")),
+        LOCAL_DATA_PATH_OUTPUT_IMG,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected')
 

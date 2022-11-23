@@ -3,6 +3,7 @@ import time
 import pickle
 import glob
 from sklearn.decomposition import IncrementalPCA
+from pca_logic.params import LOCAL_REGISTRY_PATH
 
 def load_pca(elected: bool, bw: bool, save_copy_locally=False) -> IncrementalPCA:
     """
@@ -42,7 +43,7 @@ def load_pca(elected: bool, bw: bool, save_copy_locally=False) -> IncrementalPCA
     print(f"\nLoad pca from local disk...")
 
    # get latest model version
-    model_directory = os.path.join(os.path.expanduser(os.environ.get('LOCAL_REGISTRY_PATH')),
+    model_directory = os.path.join(LOCAL_REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'models', 'pca')
@@ -103,7 +104,7 @@ def save_pca(pca: IncrementalPCA, params: dict, elected: bool, bw: bool) -> None
 
     # save params
     if params is not None:
-        params_path = os.path.join(os.path.expanduser(os.environ.get('LOCAL_REGISTRY_PATH')),
+        params_path = os.path.join(LOCAL_REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'params', 'pca')
@@ -115,7 +116,7 @@ def save_pca(pca: IncrementalPCA, params: dict, elected: bool, bw: bool) -> None
 
     # save model
     if pca is not None:
-        model_path = os.path.join(os.path.expanduser(os.environ.get('LOCAL_REGISTRY_PATH')),
+        model_path = os.path.join(LOCAL_REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'models', 'pca')

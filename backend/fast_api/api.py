@@ -37,64 +37,25 @@ async def startup_event():
 def index():
     return {"status": "ok"}
 
-@app.post('/upload_image')
-async def receive_image(img: UploadFile=File(...)):
-    ### Receiving and decoding the image
-    contents = await img.read()
-
-    nparr = np.fromstring(contents, np.uint8)
-    cv2_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR) # type(cv2_img) => numpy.ndarray
-
-    ### Do cool stuff with your image.... For example face detection
-    print(cv2_img.shape)
-    annotated_img = pad_face(resize_face(crop_face(cv2_img)))
-
-    ### Encoding and responding with the image
-    im = cv2.imencode('.png', annotated_img)[1] # extension depends on which format is sent from Streamlit
-    return Response(content=im.tobytes(), media_type="image/png")
-
-@app.post('/reconstruct_pca_main_components')
-async def receive_pca_mean_request(elected: bool, bw: bool, n_components: int):
-    pca = pcas[(elected, bw)]
-
-    annotated_img = pca_reconstruction_main(pca, n_components)*255
+@app.post('/reconstruct_random')
+async def receive_pca_mean_request(model: str, elected: bool, bw: bool, n_components: int):
+    loaded_model = pcas[(elected, bw)] if model == 'pca' else autoencoders[(elected, bw)]
+    annotated_img = pca_reconstruction_main(loaded_model, n_components)*255 if model == 'pca' else pred(loaded_model, None)[0]*255
 
     im = cv2.imencode('.png', annotated_img)[1]
     return Response(content=im.tobytes(), media_type="image/png")
 
-@app.post('/reconstruct_pca')
-async def receive_pca_image(elected: bool, bw: bool, img: UploadFile=File(...)):
+@app.post('/reconstruct_photo')
+async def receive_pca_image(model: str, elected: bool, bw: bool, img: UploadFile=File(...)):
     contents = await img.read()
     nparr = np.fromstring(contents, np.uint8)
     cv2_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    pca = pcas[(elected, bw)]
     face = pad_face(resize_face(crop_face(cv2_img)))
 
-    annotated_img = pca_reconstruction(pca, face)
+    loaded_model = pcas[(elected, bw)] if model == 'pca' else autoencoders[(elected, bw)]
 
-    im = cv2.imencode('.png', annotated_img)[1]
-    return Response(content=im.tobytes(), media_type="image/png")
-
-@app.post('/reconstruct_autoencoder_randomly')
-async def receive_autoencoder_randomly_request(elected: bool, bw: bool):
-    autoencoder = autoencoders[(elected, bw)]
-
-    annotated_img = pred(autoencoder, None)[0]*255
-
-    im = cv2.imencode('.png', annotated_img)[1]
-    return Response(content=im.tobytes(), media_type="image/png")
-
-@app.post('/reconstruct_autoencoder')
-async def receive_autoencoder_image(elected: bool, bw: bool, img: UploadFile=File(...)):
-    contents = await img.read()
-    nparr = np.fromstring(contents, np.uint8)
-    cv2_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    autoencoder = autoencoders[(elected, bw)]
-    face = pad_face(resize_face(crop_face(cv2_img)))
-
-    annotated_img = pred(autoencoder, np.expand_dims(face, axis=0))[0]*255
+    annotated_img = pca_reconstruction(loaded_model, face) if model == 'pca' else pred(loaded_model, np.expand_dims(face, axis=0))[0]*255
 
     im = cv2.imencode('.png', annotated_img)[1]
     return Response(content=im.tobytes(), media_type="image/png")

@@ -13,7 +13,8 @@ from autoencoder_logic.params import AUTOENCODER_BATCHSIZE,\
                                         AUTOENCODER_PATIENCE,\
                                         AUTOENCODER_LATENT_DIMENSION,\
                                         AUTOENCODER_LEARNING_RATE, \
-                                        AUTOENCODER_VALIDATION_SPLIT
+                                        AUTOENCODER_VALIDATION_SPLIT, \
+                                        LOCAL_DATA_PATH_OUTPUT_IMG
 
 def train():
     partial_train_autoencoder(True, False)
@@ -28,12 +29,12 @@ def partial_train_autoencoder(elected=True, bw=True):
     Save final model once it has seen all data, and compute validation metrics on a holdout validation set
     common to all chunks.
     """
-    print("\n⭐️ use case: fit autoencoder")
+    print(f"\n⭐️ use case: fit autoencoder on {'elected' if elected else 'not elected'} candidates with {'b&w' if bw else 'color'}-images")
 
     print("\nLoading preprocessed data...")
 
     folder = os.path.join(
-        os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_OUTPUT_IMG")),
+        LOCAL_DATA_PATH_OUTPUT_IMG,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected')
 

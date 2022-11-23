@@ -73,7 +73,6 @@ def build_encoder(input_shape, use_batch_norm = False, use_dropout = False, late
   encoder = build_suffix_encoder(prefix_encoder, latent_dimension)
   return encoder, shape_before_flattening
 
-#Vitor sugeriu aumentar o decoder para conseguir imagens com melhores definições visuais
 def build_decoder(latent_dimension, shape_before_flattening):
   decoder = Sequential()
   decoder.add(Dense(np.prod(shape_before_flattening), input_shape=(latent_dimension, ), activation=None))

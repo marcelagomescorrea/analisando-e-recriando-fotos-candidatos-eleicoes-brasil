@@ -5,7 +5,7 @@ import os
 
 # Set page tab display
 st.set_page_config(
-   page_title="Autoencoder",
+   page_title="Variational autoencoder",
    page_icon= '🖼️',
    layout="wide",
    initial_sidebar_state='collapsed'
@@ -17,7 +17,7 @@ url = os.getenv('LOCAL_API_URL') if str.strip(os.getenv('DEPLOY')) == 'LOCAL' el
 
 # App title and description
 st.markdown('# Analisando e recriando foto de candidatos eleitos no Brasil 📸')
-st.markdown('## Autoencoder')
+st.markdown('## Variational autoencoder')
 st.markdown("---")
 
 upper_cols = st.columns(4)
@@ -30,7 +30,7 @@ for idx, col in enumerate(upper_cols):
         elected = idx&1 == 1
         bw = idx&2==2
 
-        res = requests.post(url + "/reconstruct_autoencoder_randomly", params={'elected': elected, 'bw': bw})
+        res = requests.post(url + "/reconstruct_random", params={'model': 'autoencoder', 'elected': elected, 'bw': bw, 'n_components': 0})
 
         if res.status_code == 200:
             ### Display the image returned by the API
@@ -56,7 +56,7 @@ if img_camera_buffer is not None:
             elected = idx&1 == 1
             bw = idx&2==2
 
-            res = requests.post(url + "/reconstruct_autoencoder", params={'elected': elected, 'bw': bw}, files={'img': img_bytes})
+            res = requests.post(url + "/reconstruct_photo", params={'model': 'autoencoder', 'elected': elected, 'bw': bw}, files={'img': img_bytes})
 
             if res.status_code == 200:
                 ### Display the image returned by the API
