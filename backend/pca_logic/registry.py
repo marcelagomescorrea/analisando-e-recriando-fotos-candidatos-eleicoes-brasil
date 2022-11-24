@@ -3,7 +3,7 @@ import time
 import pickle
 import glob
 from sklearn.decomposition import IncrementalPCA
-from pca_logic.params import LOCAL_REGISTRY_PATH
+from pca_logic.params import REGISTRY_PATH
 
 def load_pca(elected: bool, bw: bool, save_copy_locally=False) -> IncrementalPCA:
     """
@@ -32,10 +32,10 @@ def load_pca(elected: bool, bw: bool, save_copy_locally=False) -> IncrementalPCA
     #     if save_copy_locally:
     #         from pathlib import Path
 
-    #         # Create the LOCAL_REGISTRY_PATH directory if it does exist
-    #         Path(LOCAL_REGISTRY_PATH).mkdir(parents=True, exist_ok=True)
+    #         # Create the REGISTRY_PATH directory if it does exist
+    #         Path(REGISTRY_PATH).mkdir(parents=True, exist_ok=True)
     #         timestamp = time.strftime("%Y%m%d-%H%M%S")
-    #         model_path = os.path.join(LOCAL_REGISTRY_PATH, "models", timestamp)
+    #         model_path = os.path.join(REGISTRY_PATH, "models", timestamp)
     #         model.save(model_path)
 
     #     return model
@@ -43,7 +43,7 @@ def load_pca(elected: bool, bw: bool, save_copy_locally=False) -> IncrementalPCA
     print(f"\nLoad pca from local disk...")
 
    # get latest model version
-    model_directory = os.path.join(LOCAL_REGISTRY_PATH,
+    model_directory = os.path.join(REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'models', 'pca')
@@ -104,7 +104,7 @@ def save_pca(pca: IncrementalPCA, params: dict, elected: bool, bw: bool) -> None
 
     # save params
     if params is not None:
-        params_path = os.path.join(LOCAL_REGISTRY_PATH,
+        params_path = os.path.join(REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'params', 'pca')
@@ -116,7 +116,7 @@ def save_pca(pca: IncrementalPCA, params: dict, elected: bool, bw: bool) -> None
 
     # save model
     if pca is not None:
-        model_path = os.path.join(LOCAL_REGISTRY_PATH,
+        model_path = os.path.join(REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'models', 'pca')

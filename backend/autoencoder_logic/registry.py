@@ -4,7 +4,7 @@ import glob
 import pickle
 import mlflow
 from tensorflow.keras import Model, models
-from autoencoder_logic.params import LOCAL_REGISTRY_PATH, MODEL_TARGET, MLFLOW_TRACKING_URI, MLFLOW_MODEL_NAME, MLFLOW_EXPERIMENT
+from autoencoder_logic.params import REGISTRY_PATH, MODEL_TARGET, MLFLOW_TRACKING_URI, MLFLOW_MODEL_NAME, MLFLOW_EXPERIMENT
 
 def load_autoencoder(elected: bool, bw: bool, custom_objects: dict) -> Model:
     """
@@ -35,7 +35,7 @@ def load_autoencoder(elected: bool, bw: bool, custom_objects: dict) -> Model:
     print("\nLoad autoencoder from local disk...")
 
    # get latest model version
-    autoencoder_directory = os.path.join(LOCAL_REGISTRY_PATH,
+    autoencoder_directory = os.path.join(REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'models', 'autoencoder')
@@ -99,7 +99,7 @@ def save_autoencoder(autoencoder: Model = None,
 
     # save params
     if params is not None:
-        params_path = os.path.join(LOCAL_REGISTRY_PATH,
+        params_path = os.path.join(REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'params', 'autoencoder')
@@ -113,7 +113,7 @@ def save_autoencoder(autoencoder: Model = None,
 
     # save metrics
     if metrics is not None:
-        metrics_path = os.path.join(LOCAL_REGISTRY_PATH,
+        metrics_path = os.path.join(REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'metrics', 'autoencoder')
@@ -127,7 +127,7 @@ def save_autoencoder(autoencoder: Model = None,
 
     # save autoencoder
     if autoencoder is not None:
-        autoencoder_path = os.path.join(LOCAL_REGISTRY_PATH,
+        autoencoder_path = os.path.join(REGISTRY_PATH,
         'bw' if bw else 'color',
         'elected' if elected else 'not_elected',
         'models', 'autoencoder')

@@ -48,10 +48,15 @@ build_gcr_image_m1:
 	docker build --platform linux/amd64 -t $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) .
 
 run_gcr_image:
-	docker run -e PORT=8000 -p 8080:8000 $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME)
+	docker run -e PORT=8000 -p 8080:8000 --env-file .env $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME)
 
 push_gcr_image:
 	docker push $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME)
 
-gcr_deploy:
+deploy_gcr_image:
 	gcloud run deploy --image $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) --platform managed --region $(REGION) --memory '2Gi' --env-vars-file .env.yaml
+
+build_push_deploy_gcr_image:
+	make build_gcr_image_m1
+	make push_gcr_image
+	make deploy_gcr_image
