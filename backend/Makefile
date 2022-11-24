@@ -28,15 +28,15 @@ docker_run:
 
 ##### GCP - - - - - - - - - - - - - - - - - - - - - - - - -
 
-GCP_PROJECT_ID=XXX
+GCP_PROJECT_ID=bootcamp-368320
 
-DOCKER_IMAGE_NAME=XXX
+DOCKER_IMAGE_NAME=analisando-e-recriando-fotos-candidatos-eleicoes-brasil-backend
 
 # https://cloud.google.com/storage/docs/locations#location-mr
-GCR_MULTI_REGION=XXX
+GCR_MULTI_REGION=us.gcr.io
 
 # https://cloud.google.com/compute/docs/regions-zones#available
-REGION=XXX
+REGION=us-central1
 
 build_gcr_image:
 	docker build -t $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) .
@@ -51,4 +51,4 @@ push_gcr_image:
 	docker push $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME)
 
 gcr_deploy:
-	gcloud run deploy --image $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) --platform managed --region $(REGION)
+	gcloud run deploy --image $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) --platform managed --region $(REGION) --memory '2Gi' --env-vars-file .env.yaml
