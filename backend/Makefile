@@ -54,7 +54,7 @@ push_gcr_image:
 	docker push $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME)
 
 deploy_gcr_image:
-	gcloud run deploy --image $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) --platform managed --region $(REGION) --memory '2Gi' --env-vars-file .env.yaml
+	gcloud run deploy --image $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) --platform managed --region $(REGION) --memory '3Gi' --env-vars-file .env.yaml
 
 build_push_deploy_gcr_image:
 	make build_gcr_image_m1
