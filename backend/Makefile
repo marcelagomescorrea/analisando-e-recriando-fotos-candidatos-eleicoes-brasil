@@ -26,6 +26,9 @@ docker_build:
 docker_run:
 	docker run -p 8000:8000 --name api template-image-api
 
+docker_clean:
+	docker builder prune
+
 ##### GCP - - - - - - - - - - - - - - - - - - - - - - - - -
 
 GCP_PROJECT_ID=bootcamp-368320
