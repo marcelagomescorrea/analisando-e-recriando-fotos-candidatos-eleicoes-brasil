@@ -8,7 +8,6 @@ COPY pca_logic ./pca_logic
 COPY autoencoder_logic ./autoencoder_logic
 COPY training_outputs ./training_outputs
 COPY requirements.txt .
-COPY .env .
 
 # libraries required by OpenCV
 RUN apt-get update
