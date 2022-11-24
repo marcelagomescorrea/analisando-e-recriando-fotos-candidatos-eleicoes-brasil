@@ -109,6 +109,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env.yaml
 
 # Spyder project settings
 .spyderproject
@@ -130,3 +131,9 @@ dmypy.json
 
 #rawdata
 raw_data/
+
+#streamlit secrets
+secrets.toml
+
+#mac stuff
+.DS_Store

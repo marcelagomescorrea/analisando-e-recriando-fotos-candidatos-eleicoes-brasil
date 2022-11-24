@@ -15,6 +15,10 @@ load_dotenv()
 
 url = os.getenv('LOCAL_API_URL') if str.strip(os.getenv('DEPLOY')) == 'LOCAL' else os.getenv('DOCKER_API_URL')
 
+if st.secrets['URL_API']:
+    url = st.secrets['URL_API']
+    st.markdown(url)
+
 # App title and description
 st.markdown('# Analisando e recriando foto de candidatos eleitos no Brasil 📸')
 st.markdown('## Incremental principal component analysis')
