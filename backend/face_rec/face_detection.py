@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from dotenv import load_dotenv
 import os
 
 AUTOENCODER_WIDTH = int(os.getenv('AUTOENCODER_WIDTH'))

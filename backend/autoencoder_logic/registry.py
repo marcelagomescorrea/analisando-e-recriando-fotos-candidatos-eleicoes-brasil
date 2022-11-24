@@ -2,43 +2,35 @@ import time
 import os
 import glob
 import pickle
+import mlflow
 from tensorflow.keras import Model, models
-from autoencoder_logic.params import LOCAL_REGISTRY_PATH
+from autoencoder_logic.params import LOCAL_REGISTRY_PATH, MODEL_TARGET, MLFLOW_TRACKING_URI, MLFLOW_MODEL_NAME, MLFLOW_EXPERIMENT
 
-def load_autoencoder(elected: bool, bw: bool, custom_objects: dict, save_copy_locally=False) -> Model:
+def load_autoencoder(elected: bool, bw: bool, custom_objects: dict) -> Model:
     """
     load the latest saved autoencoder, return None if no autoencoder found
     """
-    # if os.environ.get("MODEL_TARGET") == "mlflow":
-    #     stage = "Production"
+    if MODEL_TARGET == "mlflow":
+        stage = "Production"
 
-    #     print(Fore.BLUE + f"\nLoad model {stage} stage from mlflow..." + Style.RESET_ALL)
+        print(f"\nLoad model {stage} stage from mlflow...")
 
-    #     # load model from mlflow
-    #     mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI"))
+        # load model from mlflow
+        mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
-    #     mlflow_model_name = os.environ.get("MLFLOW_MODEL_NAME")
+        suffix = 'bw' if bw else 'color' + 'elected' if elected else 'not_elected' + 'autoencoder'
 
-    #     model_uri = f"models:/{mlflow_model_name}/{stage}"
-    #     print(f"- uri: {model_uri}")
+        model_uri = f"models:/{MLFLOW_MODEL_NAME + suffix}/{stage}"
+        print(f"- uri: {model_uri}")
 
-    #     try:
-    #         model = mlflow.keras.load_model(model_uri=model_uri)
-    #         print("\n✅ model loaded from mlflow")
-    #     except:
-    #         print(f"\n❌ no model in stage {stage} on mlflow")
-    #         return None
+        try:
+            autoencoder = mlflow.keras.load_model(model_uri=model_uri)
+            print("\n✅ model loaded from mlflow")
+        except:
+            print(f"\n❌ no model in stage {stage} on mlflow")
+            return None
 
-    #     if save_copy_locally:
-    #         from pathlib import Path
-
-    #         # Create the LOCAL_REGISTRY_PATH directory if it does exist
-    #         Path(LOCAL_REGISTRY_PATH).mkdir(parents=True, exist_ok=True)
-    #         timestamp = time.strftime("%Y%m%d-%H%M%S")
-    #         model_path = os.path.join(LOCAL_REGISTRY_PATH, "models", timestamp)
-    #         model.save(model_path)
-
-    #     return model
+        return autoencoder
 
     print("\nLoad autoencoder from local disk...")
 
@@ -72,38 +64,36 @@ def save_autoencoder(autoencoder: Model = None,
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
-    # if os.environ.get("MODEL_TARGET") == "mlflow":
+    if os.environ.get("MODEL_TARGET") == "mlflow":
 
-    #     # retrieve mlflow env params
-    #     mlflow_tracking_uri = os.environ.get("MLFLOW_TRACKING_URI")
-    #     mlflow_experiment = os.environ.get("MLFLOW_EXPERIMENT")
-    #     mlflow_model_name = os.environ.get("MLFLOW_MODEL_NAME")
+        # retrieve mlflow env params
+        suffix = 'bw' if bw else 'color' + 'elected' if elected else 'not_elected' + 'autoencoder'
 
-    #     # configure mlflow
-    #     mlflow.set_tracking_uri(mlflow_tracking_uri)
-    #     mlflow.set_experiment(experiment_name=mlflow_experiment)
+        # configure mlflow
+        mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+        mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT+suffix)
 
-    #     with mlflow.start_run():
+        with mlflow.start_run():
 
-    #         # STEP 1: push parameters to mlflow
-    #         if params is not None:
-    #             mlflow.log_params(params)
+            # STEP 1: push parameters to mlflow
+            if params is not None:
+                mlflow.log_params(params)
 
-    #         # STEP 2: push metrics to mlflow
-    #         if metrics is not None:
-    #             mlflow.log_metrics(metrics)
+            # STEP 2: push metrics to mlflow
+            if metrics is not None:
+                mlflow.log_metrics(metrics)
 
-    #         # STEP 3: push model to mlflow
-    #         if model is not None:
+            # STEP 3: push model to mlflow
+            if autoencoder is not None:
 
-    #             mlflow.keras.log_model(keras_model=model,
-    #                                    artifact_path="model",
-    #                                    keras_module="tensorflow.keras",
-    #                                    registered_model_name=mlflow_model_name)
+                mlflow.keras.log_model(keras_model=autoencoder,
+                                       artifact_path="model",
+                                       keras_module="tensorflow.keras",
+                                       registered_model_name=MLFLOW_MODEL_NAME+suffix)
 
-    #     print("\n✅ data saved to mlflow")
+        print("\n✅ data saved to mlflow")
 
-    #     return None
+        return None
 
     print("\nSave autoencoder to local disk...")
 

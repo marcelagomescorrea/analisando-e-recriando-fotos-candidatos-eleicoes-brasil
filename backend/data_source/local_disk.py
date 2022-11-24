@@ -94,7 +94,7 @@ def extract_local_files() -> dict:
             LOCAL_DATA_PATH_CSV if csv else LOCAL_DATA_PATH_INPUT_IMG,
             year)
 
-        #zip_ref.extractall(to_path)
+        zip_ref.extractall(to_path)
         zip_ref.close()
 
         if csv:
