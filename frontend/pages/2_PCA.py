@@ -1,7 +1,5 @@
 import streamlit as st
 import requests
-from dotenv import load_dotenv
-import os
 
 # Set page tab display
 st.set_page_config(
@@ -11,13 +9,13 @@ st.set_page_config(
    initial_sidebar_state='collapsed'
 )
 
-load_dotenv()
-
-url = os.getenv('LOCAL_API_URL') if str.strip(os.getenv('DEPLOY')) == 'LOCAL' else os.getenv('DOCKER_API_URL')
-
-if st.secrets['URL_API']:
-    url = st.secrets['URL_API']
-    st.markdown(url)
+url = None
+if st.secrets['DEPLOY'] == 'LOCAL':
+    url = st.secrets['LOCAL_API_URL']
+elif st.secrets['DEPLOY'] == 'DOCKER':
+    url = st.secrets['DOCKER_API_URL']
+else:
+    url = st.secrets['CLOUD_API_URL']
 
 # App title and description
 st.markdown('# Analisando e recriando foto de candidatos eleitos no Brasil 📸')

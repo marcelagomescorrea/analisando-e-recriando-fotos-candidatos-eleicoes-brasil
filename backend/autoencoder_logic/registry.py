@@ -42,6 +42,7 @@ def load_autoencoder(elected: bool, bw: bool, custom_objects: dict) -> Model:
 
     results = glob.glob(f"{autoencoder_directory}/*")
     if not results:
+        print(f"\n❌ autoencoder not loaded from disk ({autoencoder_directory})")
         return None
 
     autoencoder_path = sorted(results)[-1]

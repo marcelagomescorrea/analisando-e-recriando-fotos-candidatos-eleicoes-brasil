@@ -50,14 +50,14 @@ def load_pca(elected: bool, bw: bool, save_copy_locally=False) -> IncrementalPCA
 
     results = glob.glob(f"{model_directory}/*")
     if not results:
-        print(model_directory)
+        print(f"\n❌ pca not loaded from disk ({model_directory})")
         return None
 
     model_path = sorted(results)[-1]
     print(f"- path: {model_path}")
 
     with open(model_path, "rb") as file:
-        print("\n✅ model loaded from disk")
+        print("\n✅ pca loaded from disk")
         return pickle.load(file)
 
 def save_pca(pca: IncrementalPCA, params: dict, elected: bool, bw: bool) -> None:
