@@ -4,7 +4,7 @@ from starlette.responses import Response
 import numpy as np
 import cv2
 from face_rec.face_detection import crop_face, resize_face, pad_face
-from face_rec.face_reconstruction import pca_reconstruction, pca_reconstruction_main
+from face_rec.face_reconstruction import pca_reconstruction, pca_reconstruction_main, pca_reconstruction_mean
 from pca_logic.registry import load_pca
 from autoencoder_logic.registry import load_autoencoder
 from autoencoder_logic.model import r_loss, kl_loss, total_loss
@@ -41,12 +41,21 @@ async def startup_event():
 def index():
     return {**app.state.loading,**{'REGISTRY_PATH': REGISTRY_PATH}}.items()
 
+
+@app.post('/reconstruct_pca_mean')
+async def receive_pca_mean_request(elected: bool, bw: bool):
+    loaded_model = app.state.pcas[(elected, bw)]
+    annotated_img = pca_reconstruction_mean(loaded_model)*255
+
+    im = cv2.imencode('.png', annotated_img[:,:,::-1])[1]
+    return Response(content=im.tobytes(), media_type="image/png")
+
 @app.post('/reconstruct_random')
 async def receive_random_request(model: str, elected: bool, bw: bool, n_components: int):
     loaded_model = app.state.pcas[(elected, bw)] if model == 'pca' else app.state.autoencoders[(elected, bw)]
     annotated_img = pca_reconstruction_main(loaded_model, n_components)*255 if model == 'pca' else pred(loaded_model, None)[0]*255
 
-    im = cv2.imencode('.png', annotated_img)[1]
+    im = cv2.imencode('.png', annotated_img[:,:,::-1])[1]
     return Response(content=im.tobytes(), media_type="image/png")
 
 @app.post('/reconstruct_photo')

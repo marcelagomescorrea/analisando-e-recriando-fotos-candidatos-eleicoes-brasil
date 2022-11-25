@@ -1,2 +1,4 @@
 import os
 LOCAL_DATA_PATH_OUTPUT_IMG = os.path.expanduser(os.environ.get("LOCAL_DATA_PATH_OUTPUT_IMG"))
+AUTOENCODER_HEIGHT = int(os.getenv("AUTOENCODER_HEIGHT"))
+AUTOENCODER_WIDTH = int(os.getenv("AUTOENCODER_WIDTH"))

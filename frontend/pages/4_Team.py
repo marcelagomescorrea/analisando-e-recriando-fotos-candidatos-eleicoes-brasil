@@ -3,10 +3,10 @@ import streamlit as st
 
 # Set page tab display
 st.set_page_config(
-   page_title="About",
+   page_title="Team",
    page_icon= '🖼️',
    layout="wide",
-   initial_sidebar_state='collapsed'
+   initial_sidebar_state="expanded",
 )
 
 url = None
@@ -18,7 +18,7 @@ else:
     url = st.secrets['CLOUD_API_URL']
 
 # App title and description
-st.markdown('# About')
+st.markdown('# Team')
 st.markdown("---")
 
 avatars = [
