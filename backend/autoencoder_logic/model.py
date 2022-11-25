@@ -119,14 +119,14 @@ def train_autoencoder(autoencoder: Model,
 
     print("\nTrain autoencoder...")
 
-    es = EarlyStopping(patience=AUTOENCODER_PATIENCE, restore_best_weights=True, monitor='val_kl_loss')
+    #es = EarlyStopping(patience=AUTOENCODER_PATIENCE, restore_best_weights=True, monitor='val_loss')
 
     history = autoencoder.fit(X,
                         y,
                         validation_split=AUTOENCODER_VALIDATION_SPLIT,
                         epochs=AUTOENCODER_N_EPOCHS,
                         batch_size=AUTOENCODER_BATCHSIZE,
-                        callbacks=[es],
+                        #callbacks=[es],
                         verbose=1,
                         shuffle=True)
 
