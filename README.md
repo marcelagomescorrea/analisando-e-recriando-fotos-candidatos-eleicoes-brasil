@@ -21,7 +21,7 @@ Para treinamento do modelo e da rede neural, foram utilizados fotos de candidato
 Os dados utilizados estão disponíveis no [Portal de Dados Abertos](https://dadosabertos.tse.jus.br/) do Tribunal Superior Eleitoral (TSE). 
 
 
-# Startup the project
+# Startup the project (em construção)
 
 The initial setup.
 
